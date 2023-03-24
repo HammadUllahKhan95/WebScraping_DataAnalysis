@@ -1,0 +1,175 @@
+---
+title: "Analysis of Business Intelligence and Data Analyst related jobs in the Polish market in terms of skills required and other benefits provided"
+author: "Hammad Ullah"
+date: "07.02.2023"
+output:
+  html_document:
+    number_sections: yes
+    theme: united
+    toc: yes
+    toc_float: yes
+    dev: svg
+    highlight: haddock
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+opts_chunk$set(echo = TRUE, 
+               cache = FALSE,
+               prompt = FALSE,
+               tidy = TRUE,
+               comment = NA,
+               message = FALSE,
+               warning = FALSE,
+               fig.width = 7.4,
+               fig.height = 4.7,
+               fig.align = "center")
+opts_knit$set(width = 75)
+```
+
+<style> 
+
+tr {font-family: 'Fira Mono'; font-size:90%}
+code, kbd,pre,samp {font-family: 'Fira Mono';
+                    background-color: rgba(237, 125, 49, 0.04)}
+body, h1, h2, h3, h4, h5 {font-family: 'Fira Sans'}
+
+</style>
+
+# Introduction
+
+  The following report shall dive deeper into the Polish market and analyze the jobs that are listed under the category of Business Intelligence and Big Data.This report is presented as a case study of a University looking to launch a new masters' program under the name of "Business Engineering" where it hopes to make sure that the course content for this program prepares the students to prosper in the corporate world and have the right skills to be able to do well in their future endeavors related to their career. Moreover, the university would like to know other details regarding the jobs offered such as average salaries based on seniority of the job as well as the language requirement as many international students who enroll in the program would be looking forward to applying for jobs in the same Polish market.
+
+
+# Methodology
+## Web scraping
+
+The very first step is the selection of a static website which I shall scrape in order to get the necessary data. The website I have chosen to analyse is as follow:
+                          *https://nofluffjobs.com/*
+
+Now, we shall run the web crawler file which scrapes the data from this website and returns an unorganized, but content data as a csv file.
+```{r}
+source("Web_Crawl.R", encoding = "utf-8")
+colnames(df_main) <- c("Company","Position","Category", "Seniority", "Salary", "Requirements", "Details")
+df_main  %>% head() %>% kable()
+```
+## Data Cleaning
+As mentioned earlier, this data frame that can be seen above was saved as a .csv file and then cleaned up in another R Script file which I shall load below. The cleaned table can be seen below. Furthermore, more grouping of data is done in other tables that shall be used to visualize later. The cleaned data frame can be seen below.
+```{r}
+source("Final_clean.R", encoding = "utf-8")
+colnames(df_final) <- c("Company","Position","Category", "Seniority", "Polish Language Requirement","Location","Salary Lower Limit","Salary Upper Limit", "Requirements")
+df_final%>% head(10) %>% kable()
+```
+
+## Visualizaion and analysis
+In this section, we shall be visualizing and analyzing the data using the cleaned .csv file.
+
+### Skills required for Business Intelligence and Big Data Jobs
+
+To begin, we first categorized the skills by how often they were sought by the hiring companies. We created the following table which shows use the different skills required for jobs that fall under the category of Business Intelligence and Big Data.
+```{r}
+colnames(requirements_all) <- c("Required Skills", "Number of Jobs")
+requirements_all%>% head(10) %>% kable()
+```
+Next we visualized this using the horizontal bar plot that shows the top 5 skills needed for jobs related to Business Intelligence and Big Data
+
+
+```{r}
+top5_skills_all_plot
+```
+As we can see in the horizontal bar chart, the top 5 skills required by companies in these fields are
+as follows:
+
+- **`r (requirements_all$'Required Skills'[1])`**
+- **`r (requirements_all$'Required Skills'[2])`**
+- **`r (requirements_all$'Required Skills'[3])`**
+- **`r (requirements_all$'Required Skills'[4])`**
+- **`r (requirements_all$'Required Skills'[5])`**
+
+
+### Skills required for Business Intelligence Jobs
+However, the university will surely be interested to know the main skills required for Business Intelligence and Big Data Analyst separetly so see the differences. Here, we first categorized the data separately. The table for business intelligence can be seen below. 
+
+```{r}
+colnames(BI_musts) <- c("Required Skills", "Number of Jobs")
+BI_musts%>% head(10) %>% kable()
+```
+Next we visualized this using the horizontal bar plot that shows the top 5 skills needed for jobs related to Business Intelligence category only
+```{r}
+top5_skills_BI_plot
+```
+As we can see in the horizontal bar chart, the top 5 skills required by companies in the field of Business Intelligence are
+as follows:
+
+
+- **`r (BI_musts$'Required Skills'[1])`**
+- **`r (BI_musts$'Required Skills'[2])`**
+- **`r (BI_musts$'Required Skills'[3])`**
+- **`r (BI_musts$'Required Skills'[4])`**
+- **`r (BI_musts$'Required Skills'[5])`**
+
+
+### Skills required for Big Data Jobs
+  Likewise, the table for big data can be seen below. 
+```{r}
+colnames(big_data_musts) <- c("Required Skills", "Number of Jobs")
+big_data_musts%>% head(10) %>% kable()
+```
+
+
+Next we visualized this using the horizontal bar plot that shows the top 5 skills needed for jobs related to Big Data category only
+
+```{r}
+top5_skills_bigdata_plot
+```
+As we can see in the horizontal bar chart, the top 5 skills required by companies in the field of Big Data are
+as follows:
+
+- **`r (big_data_musts$'Required Skills'[1])`**
+- **`r (big_data_musts$'Required Skills'[2])`**
+- **`r (big_data_musts$'Required Skills'[3])`**
+- **`r (big_data_musts$'Required Skills'[4])`**
+- **`r (big_data_musts$'Required Skills'[5])`**
+
+
+### Salary ranges
+
+Morever, the university could be interested in the outcome of their program which is the pay scale for jobs falling in the overlapping field of Business Intelligence and Big Data.The following table shows the upper and lower limit of the salaries based on seniority of the role. 
+
+```{r}
+colnames(df_salaries) <- c("Seniority","Salary Lower Limit","Salary Upper Limit", "Average Salary")
+df_salaries%>% head() %>% kable()
+
+```
+Then we visualized this using box and whisker plot to be able to see the whole range of pay per month in PLN and the average salary as well. 
+
+
+```{r}
+salary_plot
+```
+As we can see in the plot, the pay range from minimum to maximum based off seniority are as follows:
+
+1. Junior Level: **`r format(df_salaries$'Salary Lower Limit'[1], scientific=FALSE)`** to **`r format(df_salaries$'Salary Upper Limit'[1],scientific=FALSE)`** PLN, which averages to **`r format(df_salaries$'Average Salary'[1],scientific=FALSE)`** PLN
+2. Mid Level: **`r format(df_salaries$'Salary Lower Limit'[2], scientific=FALSE)`** to **`r format(df_salaries$'Salary Upper Limit'[2],scientific=FALSE)`** PLN, which averages to **`r format(df_salaries$'Average Salary'[2],scientific=FALSE)`** PLN
+3. Senior Level: **`r format(df_salaries$'Salary Lower Limit'[3], scientific=FALSE)`** to **`r format(df_salaries$'Salary Upper Limit'[3],scientific=FALSE)`** PLN, which averages to **`r format(df_salaries$'Average Salary'[3],scientific=FALSE)`** PLN
+
+### Language Requirement
+
+Since, there is a big possibility that international students will be a part of this program, it is in the best interest of the university to look into the job prospects for international students in terms of language requirement.The percentage of jobs in the Polish market that has a strict requirement Polish language is **`r percent_polish`**%. This is a huge percentage, which is why the university should definitely consider adding Polish language courses in order for international students to find jobs easily in the Polish market. 
+
+
+# Conclusions
+
+Conclusively, this case study must be analyzed even deeper and further by checking more data as well in order to validate the findings. Nevertheless, we can still learn a lot from this research. Some take away points for the university are:
+
+1. Utmost priority should be teaching students the main software/skills that are required the most by the companies and also accompany them with the right mindset and approach to learn other skills by their own
+3. They must take the interests of international students into account by making sure they squeeze in 1 or 2 Polish language courses.
+2. The average salaries indicate that that this field is still well respected and paid which indirectly means that they should have little to no problem in finding students to enroll.
+4. University also needs to make a decision whether they want to launch Business Intelligence and Big Data as different departments or to merge them into one. This depends on many factors, but one to take into account from this research is that the university should merge the fields only if it believes that they can teach the students all the required skills of both departments in time. If that is not possible, then the university should stick to launching them as different departments. 
+
+
+
+
+
+
+
